@@ -2,6 +2,7 @@
  * BEGIN COPYRIGHT NOTICE
  * 
  * Copyright [2009] [Dimitrios Andreou]
+ * Copyright [2011] [Rodrigo Lemos]
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,9 +22,9 @@ package objectexplorer;
 
 import com.google.common.base.Preconditions;
 import java.lang.reflect.Field;
-import java.util.ArrayDeque;
-import java.util.Deque;
 import java.util.Iterator;
+import java.util.LinkedList;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -121,8 +122,8 @@ public abstract class Chain {
     return current.getValue();
   }
 
-  Deque<Chain> reverse() {
-    Deque<Chain> reverseChain = new ArrayDeque<Chain>(8);
+  LinkedList<Chain> reverse() {
+    LinkedList<Chain> reverseChain = new LinkedList<Chain>();
     Chain current = this;
     reverseChain.addFirst(current);
     while (current.hasParent()) {

@@ -2,6 +2,7 @@
  * BEGIN COPYRIGHT NOTICE
  * 
  * Copyright [2009] [Dimitrios Andreou]
+ * Copyright [2011] [Rodrigo Lemos]
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,7 +54,6 @@ import com.google.common.collect.TreeBasedTable;
 import com.google.common.collect.TreeMultimap;
 import com.google.common.collect.TreeMultiset;
 import java.lang.reflect.Constructor;
-import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -67,12 +67,10 @@ import java.util.TreeMap;
 import java.util.TreeSet;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentSkipListSet;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.CopyOnWriteArraySet;
 import java.util.concurrent.DelayQueue;
 import java.util.concurrent.Delayed;
-import java.util.concurrent.LinkedBlockingDeque;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.PriorityBlockingQueue;
 import java.util.concurrent.Semaphore;
@@ -110,11 +108,11 @@ public class ElementCostOfDataStructures {
     analyzeMapMaker("MapMaker", new Supplier<MapMaker>() { public MapMaker get() { return
       new MapMaker(); } });
     analyze("MapMaker_Expires", new MapPopulator(new Supplier<Map>() { public Map get() { return
-      new MapMaker().expiration(5, TimeUnit.DAYS).makeMap(); } }));
+      new MapMaker().expiration(5*60*60*24, TimeUnit.SECONDS).makeMap(); } }));
     analyze("MapMaker_Evicts", new MapPopulator(new Supplier<Map>() { public Map get() { return
       new MapMaker().maximumSize(1000000).makeMap(); } }));
     analyze("MapMaker_Expires_Evicts", new MapPopulator(new Supplier<Map>() { public Map get() { return
-      new MapMaker().maximumSize(1000000).expiration(3, TimeUnit.DAYS).makeMap(); } }));
+      new MapMaker().maximumSize(1000000).expiration(3*60*60*24, TimeUnit.SECONDS).makeMap(); } }));
     analyze("MapMaker_SoftKeys", new MapPopulator(new Supplier<Map>() { public Map get() { return
       new MapMaker().softKeys().makeMap(); } }));
     analyze("MapMaker_SoftValues", new MapPopulator(new Supplier<Map>() { public Map get() { return
@@ -128,17 +126,17 @@ public class ElementCostOfDataStructures {
     analyze("MapMaker_Evicts_SoftKeysValues", new MapPopulator(new Supplier<Map>() { public Map get() { return
       new MapMaker().maximumSize(1000000).softKeys().softValues().makeMap(); } }));
     analyze("MapMaker_Expires_SoftKeys", new MapPopulator(new Supplier<Map>() { public Map get() { return
-      new MapMaker().expiration(3, TimeUnit.DAYS).softKeys().makeMap(); } }));
+      new MapMaker().expiration(3*60*60*24, TimeUnit.SECONDS).softKeys().makeMap(); } }));
     analyze("MapMaker_Expires_SoftValues", new MapPopulator(new Supplier<Map>() { public Map get() { return
-      new MapMaker().expiration(3, TimeUnit.DAYS).softValues().makeMap(); } }));
+      new MapMaker().expiration(3*60*60*24, TimeUnit.SECONDS).softValues().makeMap(); } }));
     analyze("MapMaker_Expires_SoftKeysValues", new MapPopulator(new Supplier<Map>() { public Map get() { return
-      new MapMaker().expiration(3, TimeUnit.DAYS).softKeys().softValues().makeMap(); } }));
+      new MapMaker().expiration(3*60*60*24, TimeUnit.SECONDS).softKeys().softValues().makeMap(); } }));
     analyze("MapMaker_Expires_Evicts_SoftKeys", new MapPopulator(new Supplier<Map>() { public Map get() { return
-      new MapMaker().maximumSize(1000000).expiration(3, TimeUnit.DAYS).softKeys().makeMap(); } }));
+      new MapMaker().maximumSize(1000000).expiration(3*60*60*24, TimeUnit.SECONDS).softKeys().makeMap(); } }));
     analyze("MapMaker_Expires_Evicts_SoftValues", new MapPopulator(new Supplier<Map>() { public Map get() { return
-      new MapMaker().maximumSize(1000000).expiration(3, TimeUnit.DAYS).softValues().makeMap(); } }));
+      new MapMaker().maximumSize(1000000).expiration(3*60*60*24, TimeUnit.SECONDS).softValues().makeMap(); } }));
     analyze("MapMaker_Expires_Evicts_SoftKeysValues", new MapPopulator(new Supplier<Map>() { public Map get() { return
-      new MapMaker().maximumSize(1000000).expiration(3, TimeUnit.DAYS).softKeys().softValues().makeMap(); } }));
+      new MapMaker().maximumSize(1000000).expiration(3*60*60*24, TimeUnit.SECONDS).softKeys().softValues().makeMap(); } }));
 
     caption("        Multisets         ");
 
@@ -211,16 +209,13 @@ public class ElementCostOfDataStructures {
 
     analyze(new MapPopulator(defaultSupplierFor(WeakHashMap.class)));
     analyze(new CollectionPopulator(defaultSupplierFor(LinkedList.class)));
-    analyze(new CollectionPopulator(defaultSupplierFor(ArrayDeque.class)));
     analyze(new CollectionPopulator(defaultSupplierFor(LinkedHashSet.class)));
     analyze(new CollectionPopulator(defaultSupplierFor(PriorityQueue.class), EntryFactories.COMPARABLE));
     analyze(new CollectionPopulator(defaultSupplierFor(PriorityBlockingQueue.class), EntryFactories.COMPARABLE));
-    analyze(new CollectionPopulator(defaultSupplierFor(ConcurrentSkipListSet.class), EntryFactories.COMPARABLE));
     analyze(new CollectionPopulator(defaultSupplierFor(CopyOnWriteArrayList.class)));
     analyze(new CollectionPopulator(defaultSupplierFor(CopyOnWriteArraySet.class)));
     analyze(new CollectionPopulator(defaultSupplierFor(DelayQueue.class), EntryFactories.DELAYED));
     analyze(new CollectionPopulator(defaultSupplierFor(LinkedBlockingQueue.class)));
-    analyze(new CollectionPopulator(defaultSupplierFor(LinkedBlockingDeque.class)));
 
     caption("  Synchronization Structures");
 

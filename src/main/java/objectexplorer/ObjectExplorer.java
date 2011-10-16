@@ -2,6 +2,7 @@
  * BEGIN COPYRIGHT NOTICE
  * 
  * Copyright [2009] [Dimitrios Andreou]
+ * Copyright [2011] [Rodrigo Lemos]
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,25 +20,24 @@
  ******************************************************************************/
 package objectexplorer;
 
-import objectexplorer.ObjectVisitor.Traversal;
-import com.google.common.base.Function;
-import com.google.common.base.Predicate;
-import com.google.common.collect.Lists;
-
 import java.lang.reflect.AccessibleObject;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.util.ArrayDeque;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Deque;
 import java.util.EnumSet;
 import java.util.IdentityHashMap;
+import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 import javax.annotation.Nonnull;
+
+import objectexplorer.ObjectVisitor.Traversal;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.collect.Lists;
 
 /**
  * A depth-first object graph explorer. The traversal starts at a root (an
@@ -101,11 +101,11 @@ public class ObjectExplorer {
    */
   public static <T> T exploreObject(Object rootObject,
       ObjectVisitor<T> visitor, EnumSet<Feature> features) {
-    Deque<Chain> stack = new ArrayDeque<Chain>(32);
-    if (rootObject != null) stack.push(Chain.root(rootObject));
+    LinkedList<Chain> stack = new LinkedList<Chain>();
+    if (rootObject != null) stack.addFirst(Chain.root(rootObject));
 
     while (!stack.isEmpty()) {
-      Chain chain = stack.pop();
+      Chain chain = stack.removeFirst();
       //the only place where the return value of visit() is considered
       Traversal traversal = visitor.visit(chain);
       switch (traversal) {
@@ -130,7 +130,7 @@ public class ObjectExplorer {
               visitor.visit(chain.appendArrayIndex(i, childValue));
             continue;
           }
-          stack.push(chain.appendArrayIndex(i, childValue));
+          stack.addFirst(chain.appendArrayIndex(i, childValue));
         }
       } else {
         for (Field field : getAllFields(value)) {
@@ -153,7 +153,7 @@ public class ObjectExplorer {
               visitor.visit(extendedChain);
             continue;
           } else {
-            stack.push(extendedChain);
+            stack.addFirst(extendedChain);
           }
         }
       }
@@ -162,12 +162,11 @@ public class ObjectExplorer {
   }
 
   public static class AtMostOncePredicate implements Predicate<Chain> {
-    private final Set<Object> interner = Collections.newSetFromMap(
-        new IdentityHashMap<Object, Boolean>());
+    private final Map<Object, Boolean> interner = new IdentityHashMap<Object, Boolean>();
 
     public boolean apply(Chain chain) {
       Object o = chain.getValue();
-      return o instanceof Class<?> || interner.add(o);
+      return o instanceof Class<?> || (interner.put(o, Boolean.TRUE) == null);
     }
   }
 
