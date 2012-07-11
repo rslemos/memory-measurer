@@ -1,7 +1,7 @@
-#Sun Oct 16 10:24:16 BRST 2011
+#Thu Nov 10 11:18:06 BRST 2011
 # BEGIN COPYRIGHT NOTICE
 # 
-# Copyright [2011] [Rodrigo Lemos]
+# Copyright [2012] [Rodrigo Lemos]
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -18,8 +18,5 @@
 # END COPYRIGHT NOTICE
 activeProfiles=
 eclipse.preferences.version=1
-fullBuildGoals=process-test-resources
 resolveWorkspaceProjects=true
-resourceFilterGoals=process-resources resources\:testResources
-skipCompilerPlugin=true
 version=1

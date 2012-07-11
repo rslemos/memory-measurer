@@ -3,6 +3,7 @@ copyrightNotice() cat << EOF
 BEGIN COPYRIGHT NOTICE
 
 Copyright [2011] [Rodrigo Lemos]
+Copyright [2012] [Rodrigo Lemos]
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
